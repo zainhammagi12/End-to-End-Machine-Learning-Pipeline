@@ -1,204 +1,138 @@
-# End-to-End Machine Learning Pipeline 🚀
+# End-to-End Machine Learning Pipeline
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.0%2B-orange)
-![Flask](https://img.shields.io/badge/Flask-2.0%2B-green)
-![Docker](https://img.shields.io/badge/Docker-20.10%2B-blue)
+A complete, production-style machine learning pipeline covering every stage from raw data ingestion to model deployment — built to demonstrate real-world ML engineering practices beyond just notebook experimentation.
 
-A comprehensive end-to-end machine learning project demonstrating the complete lifecycle from data ingestion to model deployment. This project includes student performance prediction with automated ML pipeline deployment using Flask, Docker, and AWS.
+---
 
-## Features ✨
+## Problem Statement
 
-- Complete ML Pipeline Implementation
-- Automated Data Ingestion and Preprocessing
-- Custom Exception Handling
-- Modular Project Structure
-- Configurable Logging System
-- Multiple Model Training & Evaluation
-- Model Performance Tracking
-- Flask Web Application
-- Docker Containerization
-- AWS Deployment Ready
+Most ML tutorials end at model training. This project goes further: starting from raw data, through exploratory analysis, feature engineering, model selection, evaluation, threshold optimisation, and final deployment as an interactive scoring interface.
 
-## Project Architecture 🏗️
+The use case is **customer churn prediction** for a telecom dataset — a high-value business problem where the cost of false negatives (missing churners) and false positives (over-targeting loyal customers) must be explicitly balanced.
+
+---
+
+## Pipeline Overview
 
 ```
-End-to-End-ML/
-├── artifacts/
-├── notebook/
-│   └── data/
-├── src/
-│   ├── components/
-│   │   ├── data_ingestion.py
-│   │   ├── data_transformation.py
-│   │   └── model_trainer.py
-│   ├── pipeline/
-│   │   ├── prediction_pipeline.py
-│   │   └── training_pipeline.py
-│   └── utils.py
-├── templates/
-│   ├── home.html
-│   └── index.html
-├── application.py
+Raw Data (CSV)
+      │
+      ▼
+01. Exploratory Data Analysis
+    (distributions, missing values, class imbalance, correlations)
+      │
+      ▼
+02. Data Cleaning and Preprocessing
+    (nulls, duplicates, encoding, scaling)
+      │
+      ▼
+03. Feature Engineering
+    (interaction features, tenure bands, service bundles)
+      │
+      ▼
+04. Model Training and Comparison
+    (Logistic Regression, Random Forest, Gradient Boosting)
+      │
+      ▼
+05. Evaluation
+    (ROC-AUC, precision-recall curve, confusion matrix)
+      │
+      ▼
+06. Threshold Optimisation
+    (business-aligned operating point for retention targeting)
+      │
+      ▼
+07. Deployment
+    (Streamlit scoring interface with risk band output)
+```
+
+---
+
+## Key Results
+
+| Model | ROC-AUC | Notes |
+|-------|---------|-------|
+| Logistic Regression (baseline) | — | See notebook |
+| Random Forest | — | See notebook |
+| Gradient Boosting (final) | — | Selected for deployment |
+
+Threshold selected to optimise recall for high-risk customers while maintaining acceptable precision for targeted retention campaigns.
+
+---
+
+## Tech Stack
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
+![pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=white)
+
+- Python, pandas, NumPy
+- scikit-learn (model training, evaluation, preprocessing)
+- matplotlib, seaborn (visualisation)
+- Streamlit (deployment interface)
+- Jupyter Notebook
+
+---
+
+## Project Structure
+
+```
+End-to-End-ML-Pipeline/
+│
+├── notebooks/
+│   ├── 01_eda.ipynb                  # Exploratory data analysis
+│   ├── 02_preprocessing.ipynb        # Cleaning and feature engineering
+│   ├── 03_modelling.ipynb            # Training, evaluation, comparison
+│   └── 04_threshold_analysis.ipynb   # Operating threshold selection
+│
+├── app/
+│   └── streamlit_app.py              # Scoring interface
+│
+├── models/
+│   └── churn_model.pkl               # Serialised trained model
+│
+├── data/
+│   └── telecom_churn.csv             # Dataset (source: Kaggle)
+│
 ├── requirements.txt
-├── setup.py
 └── README.md
 ```
 
-## Installation & Setup 🛠️
+---
 
-1. Clone the repository:
-```bash
-git clone https://github.com/zainhammagi12/End-to-End-ML-.git
-cd End-to-End-ML-
-```
+## How to Run
 
-2. Create and activate virtual environment:
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+# Clone the repository
+git clone https://github.com/zainhammagi12/End-to-End-Machine-Learning-Pipeline
 
-3. Install dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Run the Streamlit app
+streamlit run app/streamlit_app.py
+
+# Or explore the notebooks in order
+jupyter notebook notebooks/
 ```
 
-## Project Components 📦
+---
 
-### 1. Data Ingestion
-- Automated data loading and splitting
-- Train-test split configuration
-- Data validation checks
+## Business Context
 
-### 2. Data Transformation
-- Automated feature engineering
-- Custom preprocessing pipeline
-- Handling missing values
-- Feature scaling and encoding
+The model outputs a **churn probability score** and assigns each customer to a risk band:
 
-### 3. Model Training
-- Multiple model evaluation:
-  - RandomForestRegressor
-  - Linear Regression
-  - XGBoost
-  - CatBoost
-- Hyperparameter optimization
-- Cross-validation
-- Model performance metrics
+| Risk Band | Probability | Recommended Action |
+|-----------|-------------|-------------------|
+| High | > 0.70 | Priority outreach, retention offer |
+| Medium | 0.40 – 0.70 | Monitoring, light-touch engagement |
+| Low | < 0.40 | Standard service |
 
-### 4. Prediction Pipeline
-- Real-time prediction capability
-- Input validation
-- Error handling
-- Performance logging
+The threshold between High and Medium was tuned to maximise recall for the High band — ensuring the most at-risk customers are not missed — while keeping the High band small enough to be actionable for a retention team.
 
-## Usage 🚀
+---
 
-### Training Pipeline
-```python
-from src.pipeline.training_pipeline import train
-model = train()
-```
+## Author
 
-### Prediction
-```python
-from src.pipeline.prediction_pipeline import predict
-result = predict(input_data)
-```
-
-### Web Application
-```bash
-python application.py
-```
-
-### Docker Deployment
-```bash
-docker build -t ml-pipeline .
-docker run -p 5000:5000 ml-pipeline
-```
-
-## Model Performance 📊
-
-- R² Score: 0.92
-- MAE: 4.23
-- MSE: 27.89
-- RMSE: 5.28
-
-## Configuration ⚙️
-
-Key configurations can be modified in `config.yaml`:
-```yaml
-data_path: "data/student_data.csv"
-model_params:
-  random_forest:
-    n_estimators: 100
-    max_depth: 10
-  xgboost:
-    learning_rate: 0.1
-    max_depth: 7
-```
-
-## API Reference 📚
-
-### Prediction Endpoint
-```http
-POST /predict
-Content-Type: application/json
-
-{
-  "reading_score": 75,
-  "writing_score": 82,
-  "parental_education": "bachelor's degree",
-  "lunch": "standard"
-}
-```
-
-## Logging System 📝
-
-- Comprehensive logging implementation
-- Separate logs for training and prediction
-- Custom exception tracking
-- Performance monitoring
-
-## Testing 🧪
-
-Run tests using:
-```bash
-python -m pytest tests/
-```
-
-## Contributing 🤝
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
-
-## Future Improvements 🔮
-
-- [ ] Add model versioning system
-- [ ] Implement A/B testing capability
-- [ ] Add more ML algorithms
-- [ ] Enhance API documentation
-- [ ] Add real-time monitoring dashboard
-- [ ] Implement automated retraining
-- [ ] Add support for different data formats
-
-## Author ✍️
-
-Mohammad Hammagi
-- LinkedIn: [Zain Hammagi](https://www.linkedin.com/in/zain-hammagi)
-- GitHub: [@zainhammagi12](https://github.com/zainhammagi12)
-
-## License 📄
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments 🙏
-
-- Scikit-learn documentation
-- Flask documentation
-- Docker community
-- AWS documentation
+**Zain Hammagi** — [linkedin.com/in/zain-hammagi](https://linkedin.com/in/zain-hammagi) · [zainhammagi.github.io](https://zainhammagi.github.io)
